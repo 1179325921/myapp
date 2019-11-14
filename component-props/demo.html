@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="example"></div>
+<div id="example2"></div>
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+
+<script type="text/babel">
+    //定义组件
+    function Stu(props) {
+        return (
+            <ul>
+                <li>name: {props.name}</li>
+                <li>age: {props.age}</li>
+                <li>sex: {props.sex}</li>
+            </ul>
+        )
+    }
+
+    //指定默认属性值
+    Stu.defaultProps = {
+        age: 18,
+        sex: "男"
+    }
+
+    //指定属性类型值和必要性
+    Stu.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number
+    }
+
+    const s1 = {
+        name: "Tom",
+        age: 18,
+        sex: "男"
+    }
+
+    const s2 = {
+        name: "john"
+    }
+
+    /*
+    ...的作用
+    1，打包
+    function fn(...as){} fn({1,23,4})
+    2，解包
+    const arr1=[1,2,3] const arr2=[9,...arr1,11]
+    */
+    //渲染界面
+    ReactDOM.render(<Stu name={s1.name} age={s1.age} sex={s1.sex}/>, document.getElementById("example"))
+    ReactDOM.render(<Stu {...s2}/>, document.getElementById("example2"))
+</script>
+</body>
+</html>
