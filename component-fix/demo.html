@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="example"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+
+<script type="text/babel">
+    /*
+    * 问题：数据保存在哪个组件里面？
+    * 看数据是某个组件需要，还是几个组件都需要
+    *
+    * 问题二：子组件中改变父组件的状态?子组件不能直接修改父组件的状态
+    *  父组件定义函数，传递给子组件
+    * */
+    class App extends React.Component{
+
+        constructor(props){
+            super(props)
+            this.state={
+                todos: ["吃饭","睡觉","敲代码"]
+            }
+
+            this.addTodo = this.addTodo.bind(this)
+        }
+
+        addTodo(todo){
+            //this.state.todos.shift(todo)  // 不能这么做
+            const {todos} = this.state
+            todos.unshift(todo)
+            // 更新状态
+            this.setState({todos})
+        }
+
+        render(){
+            return (
+                <div>
+                    <h1>Simple Todo List</h1>
+                    <Add count={this.state.todos.length} addTodo={this.addTodo}/>
+                    <List todos={this.state.todos}/>
+                </div>
+            )
+        }
+    }
+
+    class Add extends React.Component{
+
+        constructor(props){
+            super(props)
+            this.handleClick = this.handleClick.bind(this)
+        }
+
+        handleClick(){
+            //读取数据
+            const todo = this.input.value.trim()
+            //校验数据
+            if(!todo){
+                return
+            }
+            //添加数据
+            this.props.addTodo(todo)
+            //清楚input里数据
+            this.input.value=""
+        }
+
+        render(){
+            return (
+                <div>
+                    <input type="text" ref={input=>this.input=input}/>
+                    <button onClick={this.handleClick}>add #{this.props.count+1}</button>
+                </div>
+            )
+        }
+    }
+
+    Add.propTypes = {
+        count: PropTypes.number.isRequired,
+        addTodo: PropTypes.func.isRequired
+    }
+
+    class List extends React.Component{
+        render(){
+            return(
+                <div>
+                    <ul>
+                        {
+                            this.props.todos.map((todo,index)=><li key={index}>{todo}</li>)
+                        }
+                    </ul>
+                </div>
+            )
+        }
+    }
+
+    List.propTypes = {
+        todos: PropTypes.array.isRequired
+    }
+
+    ReactDOM.render(<App/>,document.getElementById("example"))
+</script>
+
+</body>
+</html>
