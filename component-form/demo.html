@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/react.development.js"></script>
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../js/babel.min.js"></script>
+<script type="text/javascript" src="../js/prop-types.js"></script>
+
+<script type="text/babel">
+    class MyForm extends React.Component {
+
+        constructor(props) {
+            super(props)
+            this.State = {
+                pwd: ""
+            }
+
+            this.handleChange = this.handleChange.bind(this)
+            this.handleSubmit = this.handleSubmit.bind(this)
+        }
+
+        handleSubmit(event) {
+            const name = this.nameInput.value
+            alert(name)
+            event.preventDefault()
+        }
+
+        handleChange(event) {
+            const pwd = event.target.value
+            this.setState({pwd})
+        }
+
+        render() {
+            return (
+                <div>
+                    <form onSubmit={this.handleSubmit}>
+                        姓名：<input type="text" ref={input => this.nameInput = input}/>
+                        密码：<input type="passsword" value={this.State.pwd} onChange={this.handleChange}/>
+                        <input type="submit"/>
+                    </form>
+                </div>
+            )
+        }
+    }
+
+    ReactDOM.render(<MyForm/>, document.getElementById("test"))
+</script>
+
+
+</body>
+</html>
