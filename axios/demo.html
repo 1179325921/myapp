@@ -23,14 +23,13 @@
         componentDidMount() {
             //使用axios发送异步请求
             const url = `https://api.github.com/search/repositories?q=r&sort=stars`
-            axios.get(url).then(
-                response => {
-                    const result = response.data
-                    const {name, html_url} = result.items[0]
-                    this.setState({repoName: name, repoUrl: html_url})
-                }
-            )
-
+            axios.get(url)
+                .then(response => {
+                        const result = response.data
+                        const {name, html_url} = result.items[0]
+                        this.setState({repoName: name, repoUrl: html_url})
+                    }
+                )
         }
 
         render() {
