@@ -30,6 +30,18 @@
                         this.setState({repoName: name, repoUrl: html_url})
                     }
                 )
+                .catch(err => {
+                    alert(err.message)
+                })
+            //使用fetch
+            fetch(url)
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    const {name, html_url} = data.item[0]
+                    this.setState({repoName: name, repoUrl: html_url})
+                })
         }
 
         render() {
