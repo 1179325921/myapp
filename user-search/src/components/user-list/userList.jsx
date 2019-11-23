@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import axios from 'axios'
+import Pubsub from 'pubsub-js'
+
 
 export default class UserList extends Component {
 
@@ -11,34 +13,61 @@ export default class UserList extends Component {
         errMsg: '',
     }
 
-    static propTypes = {
-        searchName: PropTypes.string.isRequired
-    }
+    // static propTypes = {
+    //     searchName: PropTypes.string.isRequired
+    // }
 
-    //当组件接收到新的属性是回调
-    componentWillReceiveProps(nextProps) {
-        const {searchName} = nextProps.searchName
-        //修改state
-        this.setState({
-            initShow: false,
-            loading: true,
-        })
-        //发ajax请求
-        const url = `https://api.github.com/search/users?q=${searchName}`
-        axios.get(url)
-            .then(response => {
-                const result = response.data
-                console.log(result)
-                const users = result.items.map(item => {
-                    return {name: item.login, url: item.html_url, avatarUrl: item.avatar_url}
+    componentDidMount() {
+        // 订阅消息
+        Pubsub.subscribe('search', (msg, searchName) => {
+            console.log(msg, searchName)
+            //修改state
+            this.setState({
+                initShow: false,
+                loading: true,
+            })
+            //发ajax请求
+            const url = `https://api.github.com/search/users?q=${searchName}`
+            axios.get(url)
+                .then(response => {
+                    const result = response.data
+                    console.log(result)
+                    const users = result.items.map(item => {
+                        return {name: item.login, url: item.html_url, avatarUrl: item.avatar_url}
+                    })
+                    this.setState({loading: false, users})
                 })
-                this.setState({loading: false, users})
-            })
-            .catch(error => {
-                this.setState({loading: false, error: error.message})
-            })
+                .catch(error => {
+                    this.setState({loading: false, error: error.message})
+                })
 
+
+        })
     }
+
+    // //当组件接收到新的属性是回调
+    // componentWillReceiveProps(nextProps) {
+    //     const {searchName} = nextProps.searchName
+    //     //修改state
+    //     this.setState({
+    //         initShow: false,
+    //         loading: true,
+    //     })
+    //     //发ajax请求
+    //     const url = `https://api.github.com/search/users?q=${searchName}`
+    //     axios.get(url)
+    //         .then(response => {
+    //             const result = response.data
+    //             console.log(result)
+    //             const users = result.items.map(item => {
+    //                 return {name: item.login, url: item.html_url, avatarUrl: item.avatar_url}
+    //             })
+    //             this.setState({loading: false, users})
+    //         })
+    //         .catch(error => {
+    //             this.setState({loading: false, error: error.message})
+    //         })
+    // }
 
     render() {
         const {initShow, loading, users, errMsg} = this.state

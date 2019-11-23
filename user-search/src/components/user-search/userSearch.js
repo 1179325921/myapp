@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import Pubsub from 'pubsub-js'
 
 export default class Search extends Component {
 
@@ -12,7 +13,8 @@ export default class Search extends Component {
         const searchName = this.input.value.trim()
         if (searchName) {
             //搜索
-            this.props.setSearchName(searchName)
+            // 发布消息(search)
+            Pubsub.publish('search', searchName)
         }
     }
 
